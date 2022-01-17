@@ -16,7 +16,7 @@ module V1
          task = current_user.tasks.create(task_params)
          if task.save
             task.set_tag_list(tag_list, current_user.id)
-         
+         #TODO: render back if the task is due today? 
             render json: TaskSerializer.new(task), status: :ok
          else
             render json:{ error: 'Unable to add task' }, status: 400
@@ -28,7 +28,9 @@ module V1
       task = Task.find(params[:id])
       task.update(task_params)
       if task.save
-         task.set_tag_list(tag_list, current_user.id)
+         if tag_list
+            task.set_tag_list(tag_list, current_user.id)
+         end
          render json: TaskSerializer.new(task), status: :ok
       else
          render json:{ error: 'Unable to update task' }, status: 400
@@ -46,8 +48,7 @@ module V1
      end 
 
      def search 
-      filtered_tasks = Task.left_outer_joins(:tags).where(tag_condition).where(title_condition).where(duefrom_condition).where(dueto_condition).distinct
-      # filtered_tasks = Task.where("title = ?", params[:title])
+      filtered_tasks = Task.left_outer_joins(:tags).where(tag_condition).where(title_condition).where(duefrom_condition).where(dueto_condition).distinct.order(duedate: :asc)
       if filtered_tasks
          render json: TaskSerializer.new(filtered_tasks), status: :ok
       else 
