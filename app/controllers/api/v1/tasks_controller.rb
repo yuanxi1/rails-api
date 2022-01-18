@@ -19,7 +19,7 @@ module V1
          #TODO: render back if the task is due today? 
             render json: TaskSerializer.new(task), status: :ok
          else
-            render json:{ error: 'Unable to add task' }, status: 400
+            render json:{ error: task.errors.full_messages[0] }, status: 400
          end 
 
      end 
@@ -48,7 +48,18 @@ module V1
      end 
 
      def search 
-      filtered_tasks = Task.left_outer_joins(:tags).where(tag_condition).where(title_condition).where(duefrom_condition).where(dueto_condition).distinct.order(duedate: :asc)
+      filtered_tasks = Task.left_outer_joins(:tags)
+      if params[:show_overdue] == 'true'
+         filtered_tasks = 
+         (filtered_tasks.where(tag_condition).where(title_condition).where(duefrom_condition).where(dueto_condition))
+         .or(
+            filtered_tasks.where('duedate<= ? AND completed=?', params[:date_to], false)
+         ).distinct.order(duedate: :asc)
+      else 
+         filtered_tasks = 
+         (filtered_tasks.where(tag_condition).where(title_condition).where(duefrom_condition).where(dueto_condition))
+         .distinct.order(duedate: :asc)
+      end 
       if filtered_tasks
          render json: TaskSerializer.new(filtered_tasks), status: :ok
       else 
@@ -77,6 +88,9 @@ module V1
     def dueto_condition
       ['duedate<= ?', params[:date_to]] unless params[:date_to].blank?
     end
+    def overdue_condition
+    end
+
 end 
 end 
 end 

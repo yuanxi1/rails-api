@@ -1,5 +1,5 @@
 class Api::V1::UsersController < ApplicationController
-    skip_before_action :authenticate_user
+    skip_before_action :authenticate_user, only: [:create]
 
     #user registration
     def create
@@ -10,7 +10,7 @@ class Api::V1::UsersController < ApplicationController
             token = encode_token(payload)
             render json: { user: UserSerializer.new(@user), JWTToken: token }, status: :created
         else
-            render json: {errors: @user.errors.full_messages}, status: :not_acceptable
+            render json: {error: @user.errors.full_messages[0]}, status: :not_acceptable
         end
     end
     def update
@@ -22,10 +22,10 @@ class Api::V1::UsersController < ApplicationController
                 token = encode_token(payload) ##potential area for DRY improvement???
                 render json: {user: UserSerializer.new(user), JWTToken: token}, status: :ok
             else 
-                render json: {errors: "Unable to update password"}, status: :unauthorized
+                render json: {error: "Unable to update password"}, status: 400
             end # render json: {user: user, JWTToken: token}, status: :accepted
         else
-            render json: {errors: "Invalid password"}, status: :unauthorized
+            render json: {error: "Wrong password"}, status: 400
         end
     end
 

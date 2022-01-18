@@ -5,6 +5,7 @@ class User < ApplicationRecord
     has_many :tasks
     has_many :tags
     validates :email, presence: true, uniqueness: {case_sensitive: false}
+    validates :password, presence: true
 
     private
     def downcase_email

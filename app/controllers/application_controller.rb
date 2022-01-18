@@ -6,7 +6,7 @@ class ApplicationController < ActionController::API
     end
 
     def encode_token(payload)
-        exp = 12.hours.from_now
+        exp = 6.hours.from_now
         payload[:exp] = exp.to_i
         JWT.encode(payload, secret_key)
     end
@@ -21,7 +21,7 @@ class ApplicationController < ActionController::API
             begin
                 JWT.decode(token, secret_key, true, algorithm: 'HS256')
             rescue JWT::DecodeError
-                nil #[{error: "Invalid Token"}]
+                [{error: "Invalid Token"}]
             end
         end
     end
@@ -40,7 +40,7 @@ class ApplicationController < ActionController::API
     
     def authenticate_user
         if ! logged_in? 
-            render json: {message: 'Please Login or Sign up to see content'}, status: :unauthorized 
+            render json: {error: 'Please Login to proceed'}, status: 401 
         end
 
     end

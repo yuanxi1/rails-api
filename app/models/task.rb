@@ -3,7 +3,8 @@ class Task < ApplicationRecord
   has_many :taggings, dependent: :destroy
   has_many :tags, through: :taggings
 
-  
+  validates :title, presence: true
+  validates :duedate, presence: true
 
   def self.tagged_with(name)
     Tag.find_by(name:name).tasks

@@ -13,7 +13,7 @@ module Api
                     render json: {user: UserSerializer.new(user), JWTToken: token}, status: :accepted
                     # render json: {user: user, JWTToken: token}, status: :accepted
                 else
-                    render json: {failure: "Invalid email or password"}, status: :unauthorized
+                    render json: {error: "Invalid email or password"}, status: 401
                 end
             end            
 

@@ -1,6 +1,6 @@
 class TaskSerializer
   include JSONAPI::Serializer
-  attributes :id, :title, :description, :completed, :duedate, :created_at
+  attributes :id, :title, :description, :completed, :duedate
   # has_many :tags
   attribute :tag_list do |object|
     object.tags.map{ |tag| {
