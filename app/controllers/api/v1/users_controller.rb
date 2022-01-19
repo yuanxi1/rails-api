@@ -28,6 +28,16 @@ class Api::V1::UsersController < ApplicationController
             render json: {error: "Wrong password"}, status: 400
         end
     end
+    def update_preference
+        user = User.find(params[:id])
+        
+        if user.update(preference_params)
+            render json: preference_params, status: :ok
+        else 
+            render json: {error: user.errors.full_messages}, status: 400
+        end # render json: {user: user, JWTToken: token}, status: :accepted
+       
+    end
 
     private 
     def user_params
@@ -35,5 +45,8 @@ class Api::V1::UsersController < ApplicationController
     end
     def resetpw_params
         params.require(:user).permit(:password, :password_confirmation)
+    end
+    def preference_params
+        params.require(:user).permit(:bg_preference)
     end
 end
