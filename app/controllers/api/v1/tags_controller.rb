@@ -36,33 +36,11 @@ module Api
           end
          end 
     
-        #  def search 
-        #   filtered_tasks = Task.left_outer_joins(:tags).where(tag_condition).where(title_condition).where(duefrom_condition).where(dueto_condition).distinct.order(duedate: :asc)
-        #   # filtered_tasks = Task.where("title = ?", params[:title])
-        #   if filtered_tasks
-        #      render json: TaskSerializer.new(filtered_tasks), status: :ok
-        #   else 
-        #      render json: {error: 'task not found'}, status: 400
-        #   end
-        #  end
     
          private 
         def tag_params
             params.require(:tag).permit(:name)
         end
-        # def title_condition
-        #   ['title= ?', params[:title]] unless params[:title].blank?
-        # end
-        # def tag_condition
-        #   ['tags.name= ?', params[:tag_name]] unless params[:tag_name].blank?
-        # end
-    
-        # def duefrom_condition
-        #   ['duedate>= ?', params[:date_from]] unless params[:date_from].blank?
-        # end
-        # def dueto_condition
-        #   ['duedate<= ?', params[:date_to]] unless params[:date_to].blank?
-        # end
     end 
-    end 
-    end 
+end 
+end 

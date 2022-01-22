@@ -2,7 +2,7 @@ class ApplicationController < ActionController::API
     before_action :authenticate_user #authenticate every request
 
     def secret_key
-        'my_secret'
+        'aKAJd7&@d#?asPWiR*K'
     end
 
     def encode_token(payload)

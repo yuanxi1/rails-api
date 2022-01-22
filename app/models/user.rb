@@ -5,7 +5,7 @@ class User < ApplicationRecord
     has_many :tasks, dependent: :destroy
     has_many :tags, dependent: :destroy
     validates :email, presence: true, uniqueness: {case_sensitive: false}
-    validates :password, presence: true, allow_nil: true
+    validates :password, presence: true, allow_nil: true, length: { minimum: 6 }
 
     private
     def downcase_email

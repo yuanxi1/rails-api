@@ -6,24 +6,19 @@ class Api::V1::UsersController < ApplicationController
         @user = User.new(user_params)
 
         if @user.save
-            payload = {user_id: @user.id}
-            token = encode_token(payload)
-            render json: { user: UserSerializer.new(@user), JWTToken: token }, status: :created
+            render status: 201
         else
-            render json: {error: @user.errors.full_messages[0]}, status: :not_acceptable
+            render json: {error: @user.errors.full_messages[0]}, status: 400
         end
     end
     def update
         user = User.find(params[:id])
         if user && user.authenticate(params[:user][:old_password])
-            #issue the token if user pass the authentication
             if user.update(resetpw_params)
-                payload = {user_id: user.id}
-                token = encode_token(payload) ##potential area for DRY improvement???
-                render json: {user: UserSerializer.new(user), JWTToken: token}, status: :ok
+                render status: 204
             else 
                 render json: {error: "Unable to update password"}, status: 400
-            end # render json: {user: user, JWTToken: token}, status: :accepted
+            end 
         else
             render json: {error: "Wrong password"}, status: 400
         end
@@ -32,10 +27,10 @@ class Api::V1::UsersController < ApplicationController
         user = User.find(params[:id])
         
         if user.update(preference_params)
-            render json: preference_params, status: :ok
+            render json: UserSerializer.new(user), status: 200
         else 
             render json: {error: user.errors.full_messages}, status: 400
-        end # render json: {user: user, JWTToken: token}, status: :accepted
+        end 
        
     end
 

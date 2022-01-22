@@ -9,9 +9,8 @@ module Api
                 if user && user.authenticate(login_params[:password])
                     #issue the token if user pass the authentication
                     payload = {user_id: user.id}
-                    token = encode_token(payload) ##potential area for DRY improvement???
+                    token = encode_token(payload) 
                     render json: {user: UserSerializer.new(user), JWTToken: token}, status: :accepted
-                    # render json: {user: user, JWTToken: token}, status: :accepted
                 else
                     render json: {error: "Invalid email or password"}, status: 401
                 end

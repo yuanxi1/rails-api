@@ -12,11 +12,9 @@ module V1
      end 
 
      def create
-         # task = current_user.tasks.create(task_params)
          task = current_user.tasks.create(task_params)
          if task.save
             task.set_tag_list(tag_list, current_user.id)
-         #TODO: render back if the task is due today? 
             render json: TaskSerializer.new(task), status: :ok
          else
             render json:{ error: task.errors.full_messages[0] }, status: 400
@@ -76,7 +74,7 @@ module V1
     end
 
     def title_condition
-      ['title= ?', params[:title]] unless params[:title].blank?
+      ['lower(title) LIKE ?', '%'+params[:title].downcase+'%'] unless params[:title].blank?
     end
     def tag_condition
       ['tags.name= ?', params[:tag_name]] unless params[:tag_name].blank?
@@ -88,8 +86,8 @@ module V1
     def dueto_condition
       ['duedate<= ?', params[:date_to]] unless params[:date_to].blank?
     end
-    def overdue_condition
-    end
+
+    
 
 end 
 end 

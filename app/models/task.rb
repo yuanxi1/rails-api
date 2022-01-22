@@ -6,11 +6,7 @@ class Task < ApplicationRecord
   validates :title, presence: true
   validates :duedate, presence: true
 
-  def self.tagged_with(name)
-    Tag.find_by(name:name).tasks
-
-  end
-
+  #find tags or create tags that do not exist, and set the tags for task 
   def set_tag_list(tag_list, user_id)
     self.tags = tag_list.map do |tag_name|
       tag = Tag.where(name: tag_name, user_id: user_id).first
