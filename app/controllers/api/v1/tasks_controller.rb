@@ -23,7 +23,7 @@ module V1
      end 
 
      def update
-      task = Task.find(params[:id])
+      task = current_user.tasks.find(params[:id])
       task.update(task_params)
       if task.save
          if tag_list
@@ -36,7 +36,7 @@ module V1
      end
 
      def destroy
-      task = Task.find(params[:id])
+      task = current_user.tasks.find(params[:id])
       id = task.id.to_s
       if task.destroy
          render json: {id: id}, status: :ok
@@ -46,7 +46,7 @@ module V1
      end 
 
      def search 
-      filtered_tasks = Task.left_outer_joins(:tags)
+      filtered_tasks = current_user.tasks.left_outer_joins(:tags)
       if params[:show_overdue] == 'true'
          filtered_tasks = 
          (filtered_tasks.where(tag_condition).where(title_condition).where(duefrom_condition).where(dueto_condition))
